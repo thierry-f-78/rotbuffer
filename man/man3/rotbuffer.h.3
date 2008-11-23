@@ -1,0 +1,217 @@
+.TH "rotbuffer.h" 3 "23 Nov 2008" "Version 0" "events" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+rotbuffer.h \- 
+.SH SYNOPSIS
+.br
+.PP
+.SS "Data Structures"
+
+.in +1c
+.ti -1c
+.RI "struct \fBrotbuffer\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "int \fBrotbuffer_read_fd\fP (struct rotbuffer *r, int fd)"
+.br
+.ti -1c
+.RI "int \fBrotbuffer_write_fd\fP (struct rotbuffer *r, int fd)"
+.br
+.ti -1c
+.RI "static void \fBrotbuffer_add_byte_wc\fP (struct rotbuffer *r, char c)"
+.br
+.ti -1c
+.RI "static int \fBrotbuffer_add_byte\fP (struct rotbuffer *r, char c)"
+.br
+.ti -1c
+.RI "static char * \fBrotbuffer_add_byte_at_pos\fP (struct rotbuffer *r, char *pos, char c)"
+.br
+.ti -1c
+.RI "static int \fBrotbuffer_free_size\fP (struct rotbuffer *r)"
+.br
+.ti -1c
+.RI "static char * \fBrotbuffer_store\fP (struct rotbuffer *r)"
+.br
+.ti -1c
+.RI "static void \fBrotbuffer_seek_wc\fP (struct rotbuffer *r, int seek)"
+.br
+.ti -1c
+.RI "static int \fBrotbuffer_seek\fP (struct rotbuffer *r, int seek)"
+.br
+.ti -1c
+.RI "static int \fBrotbuffer_pos_diff\fP (struct rotbuffer *r, char *p1, char *p2)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+
+.SH "Function Documentation"
+.PP 
+.SS "static int rotbuffer_add_byte (struct rotbuffer * r, char c)\fC [inline, static]\fP"
+.PP
+add byte at end of stream 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIr\fP struct rotbuffer 
+.br
+\fIc\fP char 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+0 no space left, 1 if ok 
+.RE
+.PP
+
+.SS "static char* rotbuffer_add_byte_at_pos (struct rotbuffer * r, char * pos, char c)\fC [inline, static]\fP"
+.PP
+add byte at position defined in stream. warning: function without integrity control. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIr\fP struct rotbuffer 
+.br
+\fIpos\fP position to add 
+.br
+\fIc\fP char 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+next postion 
+.RE
+.PP
+
+.SS "static void rotbuffer_add_byte_wc (struct rotbuffer * r, char c)\fC [inline, static]\fP"
+.PP
+add byte at end of stream. don't check for avalaible space 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIr\fP struct rotbuffer 
+.br
+\fIc\fP char 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+0 no space left, 1 if ok 
+.RE
+.PP
+
+.SS "static int rotbuffer_free_size (struct rotbuffer * r)\fC [inline, static]\fP"
+.PP
+return free space on rot buffer 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIr\fP struct rotbuffer 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+space avalaible 
+.RE
+.PP
+
+.SS "static int rotbuffer_pos_diff (struct rotbuffer * r, char * p1, char * p2)\fC [inline, static]\fP"
+.PP
+return the len from pos1 to pos2 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIr\fP struct rotbuffer 
+.br
+\fIp1\fP position 1 (returned by rotbuffer_store) 
+.br
+\fIp2\fP position 2 (returned by rotbuffer_store) 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+the space used 
+.RE
+.PP
+\fBSee also:\fP
+.RS 4
+\fBrotbuffer_store\fP 
+.RE
+.PP
+
+.SS "int rotbuffer_read_fd (struct rotbuffer * r, int fd)"
+.PP
+read max data from fd 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIr\fP struct rotbuffer 
+.br
+\fIfd\fP file descriptor 
+.RE
+.PP
+
+.SS "static int rotbuffer_seek (struct rotbuffer * r, int seek)\fC [inline, static]\fP"
+.PP
+seek space into buffer with space check. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIr\fP struct rotbuffer 
+.br
+\fIseek\fP seek value 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+0: no space avalaible, 1 ok 
+.RE
+.PP
+
+.SS "static void rotbuffer_seek_wc (struct rotbuffer * r, int seek)\fC [inline, static]\fP"
+.PP
+seek space into buffer without space check. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIr\fP struct rotbuffer 
+.br
+\fIseek\fP seek value 
+.RE
+.PP
+
+.SS "static char* rotbuffer_store (struct rotbuffer * r)\fC [inline, static]\fP"
+.PP
+get current position in buffer 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIr\fP struct rotbuffer 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+current position 
+.RE
+.PP
+
+.SS "int rotbuffer_write_fd (struct rotbuffer * r, int fd)"
+.PP
+write max data to fd 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIr\fP struct rotbuffer 
+.br
+\fIfd\fP file descriptor 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for events from the source code.
