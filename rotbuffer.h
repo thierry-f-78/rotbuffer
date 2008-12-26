@@ -18,7 +18,7 @@ struct rotbuffer {
 	char *buff_start;
 	int buff_len;
 	int buff_size;
-	char buff[1];
+	char *buff;
 };
 
 /** 
@@ -27,6 +27,15 @@ struct rotbuffer {
  * @param fd file descriptor
  */
 int rotbuffer_read_fd(struct rotbuffer *r, int fd);
+
+/**
+ * copy data from buffer
+ * @param r struct rotbuffer
+ * @param buff buffer
+ * @param blen buffer len
+ * @return size writed
+ */
+int rotbuffer_read_buff(struct rotbuffer *r, const char *buff, int blen);
 
 /** 
  * write max data to fd

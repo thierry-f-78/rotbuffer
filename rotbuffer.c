@@ -1,8 +1,57 @@
 #include <stdio.h>
 #include <errno.h>
+#include <string.h>
 #include <sys/uio.h>
 
 #include "rotbuffer.h"
+
+int rotbuffer_read_buff(struct rotbuffer *r, const char *buff, int blen) {
+	char *theo_end;
+	int len;
+	int w;
+
+	// cant read data because the buffer is full
+	if (r->buff_len == r->buff_size)
+		return 0;
+
+	// circular buffer vectors
+	theo_end = r->buff_end + r->buff_size - r->buff_len;
+
+	// first copy
+	if (theo_end <= r->buff + r->buff_size) {
+		len = theo_end - r->buff_end;
+		if (blen < len )
+			len = blen;
+		memcpy(r->buff_end, buff, len);
+	}
+
+	// two vectors (rotate)
+	else {
+		len = r->buff + r->buff_size - r->buff_end;
+		if ( blen < len )
+			len = blen;
+		memcpy(r->buff_end, buff, len);
+		blen -= len;
+		buff += len;
+		w = len;
+
+		if ( blen > 0 ) {
+			len = r->buff_size - r->buff_len - len;
+			if ( blen < len )
+				len = blen;
+			memcpy(r->buff, buff, len);
+			len += w;
+		}
+	}	
+	
+	// update circular buffer ptrs
+	r->buff_end += len;
+	r->buff_len += len;
+	if (r->buff_end >= r->buff + r->buff_size)
+		r->buff_end -= r->buff_size;
+
+	return len;
+}
 
 int rotbuffer_read_fd(struct rotbuffer *r, int fd) {
 	struct iovec vector[2];
