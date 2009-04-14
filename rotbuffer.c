@@ -152,3 +152,83 @@ int rotbuffer_write_fd(struct rotbuffer *r, int fd) {
 	}
 	return 0;
 }
+
+
+int rotbuffer_write_buff(struct rotbuffer *r, char *buff, int blen) {
+	int len;
+	int plen;
+	char *wstart;
+	
+	/* nothing to write */
+	if (r->buff_len == 0)
+		return 0;
+
+	/* set writing buffer pointer */
+	wstart = r->buff_start;
+
+
+	/* one vector case */
+	if (r->buff_start < r->buff_end) {
+
+		/* choose copy length */
+		if (r->buff_len < blen)
+			len = r->buff_len;
+		else
+			len = blen;
+
+		/* copy */
+		memcpy(buff, r->buff_start, len);
+	}
+
+
+	/* two vectors case */
+	else {
+
+		/* copy all data */
+		plen = r->buff + r->buff_size - r->buff_start;
+		if (plen < blen) {
+
+			/* first buffer part */
+			len = plen;
+			memcpy(buff, r->buff_start, len);
+			buff += len;
+
+			/* second buffer part */
+
+			/* copy all data */
+			if (len + r->buff_len - plen < blen) {
+				memcpy(buff, r->buff, len + r->buff_len - plen);
+				len += r->buff_len - plen;
+			}
+
+			/* copy part */
+			else {
+				memcpy(buff, r->buff, blen - len);
+				len = blen;
+			}
+				
+		}
+
+		/* copy all buffer */
+		else {
+			len = blen;
+			memcpy(buff, r->buff_start, len);
+		}
+	}
+
+	/* update buffer */
+	r->buff_len -= len;
+	if (r->buff_len == 0) {
+		r->buff_start = r->buff;
+		r->buff_end   = r->buff;
+	}
+	else {
+		r->buff_start += len;
+		if (r->buff_start >= r->buff + r->buff_size)
+			r->buff_start -= r->buff_size;
+	}
+
+	/* return the len copyed */
+	return len;
+}
+ 

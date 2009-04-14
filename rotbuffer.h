@@ -45,6 +45,15 @@ int rotbuffer_read_buff(struct rotbuffer *r, const char *buff, int blen);
 int rotbuffer_write_fd(struct rotbuffer *r, int fd);
 
 /** 
+ * write max data to buffer
+ * @param r struct rotbuffer
+ * @param buff buffer
+ * @param blen buffer len
+ * @return size read
+ */
+int rotbuffer_write_buff(struct rotbuffer *r, char *buff, int blen);
+
+/** 
  * add byte at end of stream. don't check for avalaible space
  * @param r struct rotbuffer
  * @param c char
